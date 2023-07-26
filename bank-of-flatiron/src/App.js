@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import SearchBar from "./components/SearchBar";
-import TransactionTable from "./components/TransactionTable";
-import mockTransactions from "./mockData"; 
-
+import SearchBar from "./SearchBar"
+import TransactionTable from "./TransactionTable";
+// S
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [transactionsData, setTransactionsData] = useState(mockTransactions);
+  const [transactionsData, setTransactionsData] = useState([]);
 
   const filteredTransactions = transactionsData.filter((transaction) =>
     transaction.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(()=>{
+    fetch("http://localhost:3000/transactions")
+      .then((res) => res.json())
+      .then((data) => setTransactionsData(data) )
+  })
   const addTransaction = (newTransaction) => {
     setTransactionsData([...transactionsData, newTransaction]);
   };
